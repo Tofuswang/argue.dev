@@ -609,8 +609,14 @@ font-size: 16px;
  </footer>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
-function handleSubmit() {
+const supabase = window.supabase.createClient(
+ 'https://dxkbsueowaufpllyjoip.supabase.co',
+ 'sb_publishable_ZiKU6Mc2f0HhVcFtDfuveA_XXcSknJv'
+);
+
+async function handleSubmit() {
  const input = document.getElementById('emailInput');
  const form = document.getElementById('emailForm');
  const note = document.getElementById('formNote');
@@ -635,12 +641,21 @@ function handleSubmit() {
  btn.style.opacity = '0.6';
  btn.style.pointerEvents = 'none';
 
+ const { error } = await supabase.from('waitlist').insert({ email });
+
+ if (error) {
+ btn.textContent = error.code === '23505' ? 'already on the list' : 'error — try again';
+ btn.style.opacity = '1';
  setTimeout(() => {
+ btn.textContent = 'compile.join()';
+ btn.style.pointerEvents = 'auto';
+ }, 2000);
+ return;
+ }
+
  form.style.display = 'none';
  note.style.display = 'none';
  success.style.display = 'block';
- console.log('Waitlist signup:', email);
- }, 1200);
 }
 
 document.getElementById('emailInput').addEventListener('keydown', function(e) {
