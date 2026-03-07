@@ -594,7 +594,7 @@ font-size: 16px;
 
  <div class="email-form" id="emailForm">
  <input type="email" class="email-input" id="emailInput" placeholder="you@example.com" required>
- <button class="submit-btn" id="submitBtn" onclick="handleSubmit()">compile.join()</button>
+ <button class="submit-btn" id="submitBtn">compile.join()</button>
  </div>
  <p class="form-note" id="formNote">No spam. Just a ping when we ship.</p>
 
@@ -669,6 +669,7 @@ async function handleSubmit() {
  }
 }
 
+document.getElementById('submitBtn').addEventListener('click', handleSubmit);
 document.getElementById('emailInput').addEventListener('keydown', function(e) {
  if (e.key === 'Enter') handleSubmit();
 });
