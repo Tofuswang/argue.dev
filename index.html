@@ -76,6 +76,12 @@ color: var(--text-dim);
 color: var(--accent);
 }
 
+.nav-right {
+display: flex;
+align-items: center;
+gap: 16px;
+}
+
 .nav-status {
 font-size: 11px;
 color: var(--text-dim);
@@ -91,6 +97,23 @@ height: 6px;
 background: var(--green);
 border-radius: 50%;
 animation: pulse 2s infinite;
+}
+
+.lang-toggle {
+font-size: 11px;
+color: var(--text-dim);
+background: var(--surface);
+border: 1px solid var(--border);
+border-radius: 4px;
+padding: 4px 10px;
+cursor: pointer;
+font-family: var(--mono);
+transition: all 0.2s;
+}
+
+.lang-toggle:hover {
+color: var(--text);
+border-color: var(--accent);
 }
 
 @keyframes pulse {
@@ -392,13 +415,16 @@ font-size: 16px;
 <div class="container">
  <nav>
  <div class="logo">argue<span>.</span>dev</div>
- <div class="nav-status">building in public</div>
+ <div class="nav-right">
+ <div class="nav-status" data-i18n="nav-status">building in public</div>
+ <button class="lang-toggle" id="langToggle">中文</button>
+ </div>
  </nav>
 
  <section class="hero">
- <div class="hero-label">A new kind of writing tool</div>
- <h1>Write arguments<br>like you write <em>code.</em></h1>
- <p class="hero-sub">
+ <div class="hero-label" data-i18n="hero-label">A new kind of writing tool</div>
+ <h1 data-i18n="hero-title">Write arguments<br>like you write <em>code.</em></h1>
+ <p class="hero-sub" data-i18n="hero-sub">
  An argument compiler that catches logical errors before your readers do. Define your terms. Check your reasoning. Ship arguments that compile.
  </p>
  </section>
@@ -463,75 +489,134 @@ font-size: 16px;
  </div>
 
  <div class="compile-output">
- <div><span class="error-icon">✗</span> <strong>Line 11</strong> — <span class="keyword">type mismatch</span>: "taste" was defined as selection ability, but "innovation" was never defined. Cannot infer causal link.</div>
+ <div data-i18n="error-1"><span class="error-icon">✗</span> <strong>Line 11</strong> — <span class="keyword">type mismatch</span>: "taste" was defined as selection ability, but "innovation" was never defined. Cannot infer causal link.</div>
  <br>
- <div><span class="warn-icon">⚠</span> <strong>Line 6</strong> — <span class="type">undefined term</span>: "operators" used in claim but not in <span class="keyword">define</span> block.</div>
+ <div data-i18n="error-2"><span class="warn-icon">⚠</span> <strong>Line 6</strong> — <span class="type">undefined term</span>: "operators" used in claim but not in <span class="keyword">define</span> block.</div>
  <br>
- <div><span class="dim">Found <strong>1 error</strong>, <strong>1 warning</strong>. Fix before publishing.</span></div>
+ <div data-i18n="error-summary"><span class="dim">Found <strong>1 error</strong>, <strong>1 warning</strong>. Fix before publishing.</span></div>
  </div>
 
  <section class="features">
- <div class="features-label">// How it works</div>
+ <div class="features-label" data-i18n="features-label">// How it works</div>
 
  <div class="feature">
  <div class="feature-icon">①</div>
  <div>
- <h3>Define your types</h3>
- <p>Every key term gets a definition node. Use a word without defining it? That's an undefined variable. The compiler catches it before your reader does.</p>
+ <h3 data-i18n="f1-title">Define your types</h3>
+ <p data-i18n="f1-desc">Every key term gets a definition node. Use a word without defining it? That's an undefined variable. The compiler catches it before your reader does.</p>
  </div>
  </div>
 
  <div class="feature">
  <div class="feature-icon">②</div>
  <div>
- <h3>Connect your logic</h3>
- <p>Link claims to reasons, reasons to evidence. If there's a gap in the chain — a premise that leads nowhere, a conclusion without support — the compiler flags it.</p>
+ <h3 data-i18n="f2-title">Connect your logic</h3>
+ <p data-i18n="f2-desc">Link claims to reasons, reasons to evidence. If there's a gap in the chain — a premise that leads nowhere, a conclusion without support — the compiler flags it.</p>
  </div>
  </div>
 
  <div class="feature">
  <div class="feature-icon">③</div>
  <div>
- <h3>Compile and check</h3>
- <p>Hit compile. Structural errors (missing definitions, broken chains) get caught instantly. Deep logic checks (does A actually imply B?) are powered by the most advanced AI models available.</p>
+ <h3 data-i18n="f3-title">Compile and check</h3>
+ <p data-i18n="f3-desc">Hit compile. Structural errors (missing definitions, broken chains) get caught instantly. Deep logic checks (does A actually imply B?) are powered by the most advanced AI models available.</p>
  </div>
  </div>
 
  <div class="feature">
  <div class="feature-icon">④</div>
  <div>
- <h3>Export as prose</h3>
- <p>Once your argument compiles clean, export it as a readable essay, a Twitter thread, a presentation — same logic skeleton, different output formats.</p>
+ <h3 data-i18n="f4-title">Export as prose</h3>
+ <p data-i18n="f4-desc">Once your argument compiles clean, export it as a readable essay, a Twitter thread, a presentation — same logic skeleton, different output formats.</p>
  </div>
  </div>
  </section>
 
  <section class="manifesto">
- <div class="manifesto-label">// Why this exists</div>
- <blockquote>
+ <div class="manifesto-label" data-i18n="manifesto-label">// Why this exists</div>
+ <blockquote data-i18n="manifesto-quote">
  The problem isn't that you can't think.<br>
  It's that no tool helps you <em>hold</em> a thought long enough to finish it.
  </blockquote>
- <p class="manifesto-body">
+ <p class="manifesto-body" data-i18n="manifesto-body">
  Writing tools help you produce words. Argue helps you produce reasoning. It doesn't write for you — it shows you where your thinking breaks. Like a compiler that refuses to run bad code, Argue refuses to let you publish bad logic.<br><br>
  Built for the ADHD brain. Built for anyone who thinks faster than they can organize. Built for people who know what they mean but struggle to prove it on paper.
  </p>
  </section>
 
  <section class="waitlist">
- <h2>Get early access.</h2>
- <p class="waitlist-sub">We're building the first version now. Join the waitlist.</p>
+ <h2 data-i18n="waitlist-title">Get early access.</h2>
+ <p class="waitlist-sub" data-i18n="waitlist-sub">We're building the first version now. Join the waitlist.</p>
 
  <div style="width:100%;height:500px;" data-fillout-id="95s7hnxWxCus" data-fillout-embed-type="standard" data-fillout-inherit-parameters data-fillout-dynamic-resize></div>
  </section>
 
  <footer>
  <span>© 2026 argue.dev</span>
- <span>Made in Taipei</span>
+ <span data-i18n="footer">Made in Taipei</span>
  </footer>
 </div>
 
 <script src="https://server.fillout.com/embed/v1/"></script>
+<script>
+const i18n = {
+ 'zh-TW': {
+ 'nav-status': '公開建造中',
+ 'hero-label': '一種全新的寫作工具',
+ 'hero-title': '像寫程式一樣<br>寫<em>論述。</em>',
+ 'hero-sub': '一個論述編譯器，在讀者發現之前就抓出你的邏輯錯誤。定義你的術語、檢查你的推理、發布能通過編譯的論述。',
+ 'error-1': '<span class="error-icon">✗</span> <strong>第 11 行</strong> — <span class="keyword">型別不符</span>：「品味」被定義為選擇能力，但「創新」從未被定義。無法推斷因果關係。',
+ 'error-2': '<span class="warn-icon">⚠</span> <strong>第 6 行</strong> — <span class="type">未定義術語</span>：「operators」在主張中使用但未在 <span class="keyword">define</span> 區塊中定義。',
+ 'error-summary': '<span class="dim">發現 <strong>1 個錯誤</strong>、<strong>1 個警告</strong>。發布前請修正。</span>',
+ 'features-label': '// 如何運作',
+ 'f1-title': '定義你的型別',
+ 'f1-desc': '每個關鍵術語都有一個定義節點。使用了未定義的詞？那就是未定義變數。編譯器會在讀者之前就抓到它。',
+ 'f2-title': '連接你的邏輯',
+ 'f2-desc': '將主張連結到理由，理由連結到證據。如果邏輯鏈有斷裂——某個前提沒有指向任何結論、某個結論缺乏支持——編譯器會標記出來。',
+ 'f3-title': '編譯並檢查',
+ 'f3-desc': '按下編譯。結構性錯誤（缺少定義、斷裂的邏輯鏈）會立即被捕捉。深層邏輯檢查（A 是否真的能推出 B？）由最先進的 AI 模型驅動。',
+ 'f4-title': '輸出為文章',
+ 'f4-desc': '當你的論述通過編譯，將它輸出為一篇可讀的文章、一串推文、一份簡報——同一個邏輯骨架，不同的輸出格式。',
+ 'manifesto-label': '// 為什麼做這個',
+ 'manifesto-quote': '問題不是你不會思考。<br>而是沒有工具幫你<em>抓住</em>一個想法，長到足以完成它。',
+ 'manifesto-body': '寫作工具幫你產出文字。Argue 幫你產出推理。它不替你寫——它告訴你哪裡的思考斷了。就像編譯器拒絕執行有 bug 的程式碼，Argue 拒絕讓你發布有漏洞的邏輯。<br><br>為 ADHD 的大腦而生。為所有思考速度快過整理速度的人而生。為那些知道自己想說什麼、卻難以在紙上證明的人而生。',
+ 'waitlist-title': '搶先體驗。',
+ 'waitlist-sub': '我們正在打造第一個版本。加入候補名單。',
+ 'footer': '台北製造',
+ }
+};
+
+let currentLang = 'en';
+const toggle = document.getElementById('langToggle');
+
+// Store original English content
+const originals = {};
+document.querySelectorAll('[data-i18n]').forEach(el => {
+ originals[el.dataset.i18n] = el.innerHTML;
+});
+
+toggle.addEventListener('click', () => {
+ if (currentLang === 'en') {
+ currentLang = 'zh-TW';
+ document.querySelectorAll('[data-i18n]').forEach(el => {
+  if (i18n['zh-TW'][el.dataset.i18n]) {
+  el.innerHTML = i18n['zh-TW'][el.dataset.i18n];
+  }
+ });
+ toggle.textContent = 'EN';
+ document.documentElement.lang = 'zh-TW';
+ } else {
+ currentLang = 'en';
+ document.querySelectorAll('[data-i18n]').forEach(el => {
+  if (originals[el.dataset.i18n]) {
+  el.innerHTML = originals[el.dataset.i18n];
+  }
+ });
+ toggle.textContent = '中文';
+ document.documentElement.lang = 'en';
+ }
+});
+</script>
 
 </body>
 </html>
