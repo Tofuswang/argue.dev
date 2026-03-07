@@ -354,76 +354,6 @@ font-weight: 300;
 margin-bottom: 32px;
 }
 
-.email-form {
-display: flex;
-gap: 12px;
-max-width: 480px;
-}
-
-.email-input {
-flex: 1;
-padding: 14px 18px;
-background: var(--surface);
-border: 1px solid var(--border);
-border-radius: 6px;
-color: var(--text);
-font-family: var(--mono);
-font-size: 14px;
-outline: none;
-transition: border-color 0.2s;
-}
-
-.email-input::placeholder {
-color: var(--text-dim);
-opacity: 0.5;
-}
-
-.email-input:focus {
-border-color: var(--accent);
-box-shadow: 0 0 0 3px var(--accent-glow);
-}
-
-.submit-btn {
-padding: 14px 28px;
-background: var(--accent);
-color: white;
-border: none;
-border-radius: 6px;
-font-family: var(--mono);
-font-size: 13px;
-font-weight: 500;
-cursor: pointer;
-transition: all 0.2s;
-white-space: nowrap;
-letter-spacing: 0.05em;
-}
-
-.submit-btn:hover {
-background: #e11d48;
-transform: translateY(-1px);
-}
-
-.submit-btn:active {
-transform: translateY(0);
-}
-
-.form-note {
-margin-top: 16px;
-font-size: 11px;
-color: var(--text-dim);
-opacity: 0.6;
-}
-
-.success-msg {
-display: none;
-padding: 16px 20px;
-background: rgba(34, 197, 94, 0.08);
-border: 1px solid rgba(34, 197, 94, 0.3);
-border-radius: 6px;
-color: var(--green);
-font-size: 13px;
-max-width: 480px;
-}
 
 /* Footer */
 footer {
@@ -592,15 +522,7 @@ font-size: 16px;
  <h2>Get early access.</h2>
  <p class="waitlist-sub">We're building the first version now. Join the waitlist.</p>
 
- <div class="email-form" id="emailForm">
- <input type="email" class="email-input" id="emailInput" placeholder="you@example.com" required>
- <button class="submit-btn" id="submitBtn">compile.join()</button>
- </div>
- <p class="form-note" id="formNote">No spam. Just a ping when we ship.</p>
-
- <div class="success-msg" id="successMsg">
- ✓ &nbsp;You're on the list. We'll ping you when the compiler is ready.
- </div>
+ <div style="width:100%;height:500px;" data-fillout-id="95s7hnxWxCus" data-fillout-embed-type="standard" data-fillout-inherit-parameters data-fillout-dynamic-resize></div>
  </section>
 
  <footer>
@@ -609,84 +531,7 @@ font-size: 16px;
  </footer>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-<script>
-let sb;
-try {
- sb = window.supabase.createClient(
- 'https://dxkbsueowaufpllyjoip.supabase.co',
- 'sb_publishable_ZiKU6Mc2f0HhVcFtDfuveA_XXcSknJv'
- );
- console.log('Supabase client initialized');
-} catch (e) {
- console.error('Failed to init Supabase:', e);
- alert('Supabase init failed: ' + e.message);
-}
-
-async function handleSubmit() {
- const input = document.getElementById('emailInput');
- const form = document.getElementById('emailForm');
- const note = document.getElementById('formNote');
- const success = document.getElementById('successMsg');
- const btn = document.getElementById('submitBtn');
-
- const email = input.value.trim();
-
- if (!email || !email.includes('@') || !email.includes('.')) {
- input.style.borderColor = '#f43f5e';
- input.style.boxShadow = '0 0 0 3px rgba(244, 63, 94, 0.15)';
- input.setAttribute('placeholder', 'type error: expected valid email');
- setTimeout(() => {
- input.style.borderColor = '#1e1e24';
- input.style.boxShadow = 'none';
- input.setAttribute('placeholder', 'you@example.com');
- }, 2000);
- return;
- }
-
- if (!sb) {
- alert('Supabase not loaded — check console');
- return;
- }
-
- btn.textContent = 'compiling...';
- btn.style.opacity = '0.6';
- btn.style.pointerEvents = 'none';
-
- try {
- const { error } = await sb.from('waitlist').insert({ email });
- console.log('Supabase response:', error || 'success');
-
- if (error) {
- btn.textContent = error.code === '23505' ? 'already on the list' : 'error — try again';
- btn.style.opacity = '1';
- setTimeout(() => {
- btn.textContent = 'compile.join()';
- btn.style.pointerEvents = 'auto';
- }, 2000);
- return;
- }
-
- form.style.display = 'none';
- note.style.display = 'none';
- success.style.display = 'block';
- } catch (err) {
- console.error('Supabase error:', err);
- alert('Error: ' + err.message);
- btn.textContent = 'error — try again';
- btn.style.opacity = '1';
- setTimeout(() => {
- btn.textContent = 'compile.join()';
- btn.style.pointerEvents = 'auto';
- }, 2000);
- }
-}
-
-document.getElementById('submitBtn').addEventListener('click', handleSubmit);
-document.getElementById('emailInput').addEventListener('keydown', function(e) {
- if (e.key === 'Enter') handleSubmit();
-});
-</script>
+<script src="https://server.fillout.com/embed/v1/"></script>
 
 </body>
 </html>
