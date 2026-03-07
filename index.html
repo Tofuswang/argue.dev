@@ -611,10 +611,17 @@ font-size: 16px;
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
-const supabase = window.supabase.createClient(
+let sb;
+try {
+ sb = window.supabase.createClient(
  'https://dxkbsueowaufpllyjoip.supabase.co',
  'sb_publishable_ZiKU6Mc2f0HhVcFtDfuveA_XXcSknJv'
-);
+ );
+ console.log('Supabase client initialized');
+} catch (e) {
+ console.error('Failed to init Supabase:', e);
+ alert('Supabase init failed: ' + e.message);
+}
 
 async function handleSubmit() {
  const input = document.getElementById('emailInput');
@@ -637,12 +644,17 @@ async function handleSubmit() {
  return;
  }
 
+ if (!sb) {
+ alert('Supabase not loaded — check console');
+ return;
+ }
+
  btn.textContent = 'compiling...';
  btn.style.opacity = '0.6';
  btn.style.pointerEvents = 'none';
 
  try {
- const { error } = await supabase.from('waitlist').insert({ email });
+ const { error } = await sb.from('waitlist').insert({ email });
  console.log('Supabase response:', error || 'success');
 
  if (error) {
@@ -660,6 +672,7 @@ async function handleSubmit() {
  success.style.display = 'block';
  } catch (err) {
  console.error('Supabase error:', err);
+ alert('Error: ' + err.message);
  btn.textContent = 'error — try again';
  btn.style.opacity = '1';
  setTimeout(() => {
