@@ -351,7 +351,7 @@ gap: 4px;
 flex-wrap: wrap;
 opacity: 0;
 animation: lineIn 0.4s ease forwards;
-animation-delay: 1.6s;
+animation-delay: 1.9s;
 }
 
 .struct-tag {
@@ -417,6 +417,18 @@ opacity: 0;
 animation: lineIn 0.4s ease forwards;
 }
 
+.agent-msg.user {
+color: var(--text);
+font-size: 12px;
+line-height: 1.8;
+padding: 10px 12px;
+background: rgba(255,255,255,0.03);
+border-radius: 6px;
+border: 1px solid var(--border);
+opacity: 0;
+animation: lineIn 0.4s ease forwards;
+}
+
 .agent-msg.assistant {
 color: var(--text-dim);
 padding: 0 2px;
@@ -450,7 +462,7 @@ padding: 12px;
 border-top: 1px solid var(--border);
 }
 
-.agent-input {
+textarea.agent-input {
 width: 100%;
 background: rgba(255,255,255,0.03);
 border: 1px solid var(--border);
@@ -462,6 +474,7 @@ font-size: 12px;
 resize: none;
 outline: none;
 transition: border-color 0.2s;
+line-height: 1.6;
 }
 
 .agent-input::placeholder {
@@ -493,23 +506,21 @@ from { opacity: 0; transform: translateY(4px); }
 to { opacity: 1; transform: translateY(0); }
 }
 
-.editor-line:nth-child(1) { animation-delay: 0.3s; }
-.editor-line:nth-child(2) { animation-delay: 0.4s; }
-.editor-line:nth-child(3) { animation-delay: 0.5s; }
-.editor-line:nth-child(4) { animation-delay: 0.6s; }
-.editor-line:nth-child(5) { animation-delay: 0.7s; }
-.editor-line:nth-child(6) { animation-delay: 0.8s; }
-.editor-line:nth-child(7) { animation-delay: 0.9s; }
-.editor-line:nth-child(8) { animation-delay: 1.0s; }
-.inline-annotation:nth-child(9) { animation-delay: 1.1s; }
-.editor-line:nth-child(10) { animation-delay: 1.2s; }
-.editor-line:nth-child(11) { animation-delay: 1.3s; }
-.inline-annotation:nth-child(12) { animation-delay: 1.4s; }
-.inline-annotation:nth-child(13) { animation-delay: 1.5s; }
+/* Agent messages appear first (user braindumps, then argue responds) */
+.agent-msg:nth-child(1) { animation-delay: 0.3s; }
+.agent-msg:nth-child(2) { animation-delay: 0.9s; }
 
-.agent-msg:nth-child(1) { animation-delay: 0.8s; }
-.agent-msg:nth-child(2) { animation-delay: 1.3s; }
-.agent-msg:nth-child(3) { animation-delay: 1.8s; }
+/* Then the compiled code appears line by line */
+.editor-line:nth-child(1) { animation-delay: 0.8s; }
+.editor-line:nth-child(2) { animation-delay: 0.9s; }
+.editor-line:nth-child(3) { animation-delay: 1.0s; }
+.editor-line:nth-child(4) { animation-delay: 1.1s; }
+.editor-line:nth-child(5) { animation-delay: 1.2s; }
+.inline-annotation:nth-child(6) { animation-delay: 1.3s; }
+.editor-line:nth-child(7) { animation-delay: 1.4s; }
+.editor-line:nth-child(8) { animation-delay: 1.5s; }
+.inline-annotation:nth-child(9) { animation-delay: 1.6s; }
+.editor-line:nth-child(10) { animation-delay: 1.7s; }
 
 /* Features */
 .features {
@@ -684,83 +695,44 @@ display: none;
  <a href="#waitlist" class="hero-cta" data-i18n="hero-cta">Join the waitlist <span class="arrow">→</span></a>
  </section>
 
- <div class="ide-container" data-i18n-block="ide">
- <!-- Editor panel (left) -->
+ <div class="ide-container">
+ <!-- Editor panel (left) — Argue's compiled syntax -->
  <div class="editor-panel">
  <div class="ide-bar">
  <div class="ide-dot"></div>
  <div class="ide-dot"></div>
  <div class="ide-dot"></div>
- <span class="ide-title">draft.txt</span>
- <div class="ide-tabs">
- <span class="ide-tab active">draft.txt</span>
- </div>
+ <span class="ide-title" data-i18n="ide-title">draft.argue — compiled output</span>
  </div>
  <div class="editor-body" data-i18n="editor-body">
- <div class="editor-line">
- <span class="editor-line-num">1</span>
- <span class="editor-line-text">I think taste is super important for founders.</span>
+ <div class="editor-line"><span class="editor-line-num">1</span><span class="editor-line-text"><span class="keyword">claim</span> <span class="string">"taste is important for founders"</span> {</span></div>
+ <div class="editor-line"><span class="editor-line-num">2</span><span class="editor-line-text">  <span class="type">reason</span> <span class="string">"builders decide what to build"</span></span></div>
+ <div class="editor-line"><span class="editor-line-num">3</span><span class="editor-line-text">  <span class="type">reason</span> <span class="string">"taste = picking 3 good ideas out of 100"</span></span></div>
+ <div class="editor-line"><span class="editor-line-num">4</span><span class="editor-line-text"></span></div>
+ <div class="editor-line has-warning"><span class="editor-line-num">5</span><span class="editor-line-text">  <span class="type">reason</span> <span class="string">"operators don't create anything new"</span></span></div>
+ <div class="inline-annotation warn"><span class="annotation-icon">⚠</span><span class="annotation-text">scope too broad — always true?</span></div>
+ <div class="editor-line"><span class="editor-line-num">6</span><span class="editor-line-text"></span></div>
+ <div class="editor-line has-error"><span class="editor-line-num">7</span><span class="editor-line-text">  <span class="keyword">therefore</span> <span class="string">"taste is a prerequisite for innovation"</span></span></div>
+ <div class="inline-annotation error"><span class="annotation-icon">✗</span><span class="annotation-text">logical gap — "picking good ideas" ≠ "innovation"</span></div>
+ <div class="editor-line"><span class="editor-line-num">8</span><span class="editor-line-text">}</span></div>
  </div>
- <div class="editor-line">
- <span class="editor-line-num">2</span>
- <span class="editor-line-text">like, operators just keep things running but</span>
- </div>
- <div class="editor-line">
- <span class="editor-line-num">3</span>
- <span class="editor-line-text">builders actually decide what to build. taste is</span>
- </div>
- <div class="editor-line">
- <span class="editor-line-num">4</span>
- <span class="editor-line-text">basically picking the 3 good ideas out of 100.</span>
- </div>
- <div class="editor-line has-warning">
- <span class="editor-line-num">5</span>
- <span class="editor-line-text">operators don't really create anything new, they</span>
- </div>
- <div class="inline-annotation warn">
- <span class="annotation-icon">⚠</span>
- <span class="annotation-text"><strong>scope too broad</strong> — "operators don't create anything new" — always true?</span>
- </div>
- <div class="editor-line has-error">
- <span class="editor-line-num">6</span>
- <span class="editor-line-text">just optimize. so yeah taste is basically a</span>
- </div>
- <div class="editor-line has-error">
- <span class="editor-line-num">7</span>
- <span class="editor-line-text">prerequisite for innovation I think</span>
- </div>
- <div class="inline-annotation error">
- <span class="annotation-icon">✗</span>
- <span class="annotation-text"><strong>logical gap</strong> — you defined taste as "picking good ideas" but jumped to "prerequisite for innovation" — why does selecting well lead to innovating?</span>
+ <div class="editor-structure" data-i18n="editor-status">
+ <span class="keyword">1 error</span><span class="dim">,</span> <span class="type">1 warning</span><span class="dim"> — fix before publishing</span>
  </div>
  </div>
- <div class="editor-structure">
- <span class="struct-tag claim">claim: taste matters</span>
- <span class="dim">←</span>
- <span class="struct-tag reason">builders decide</span>
- <span class="dim">+</span>
- <span class="struct-tag reason">pick 3/100</span>
- <span class="dim">→</span>
- <span class="struct-tag gap">taste → innovation?</span>
- </div>
- </div>
- <!-- Agent panel (right) -->
+ <!-- Agent panel (right) — braindump + conversation -->
  <div class="agent-panel">
  <div class="agent-bar" data-i18n="agent-bar">argue agent</div>
  <div class="agent-body" data-i18n="agent-body">
- <div class="agent-msg system">compiled with <span class="keyword">1 error</span>, <span class="type">1 warning</span></div>
+ <div class="agent-msg user">I think taste is super important for founders. like, operators just keep things running but builders actually decide what to build. taste is basically picking the 3 good ideas out of 100. operators don't really create anything new, they just optimize. so yeah taste is basically a prerequisite for innovation I think</div>
  <div class="agent-msg assistant">
  <div class="agent-label">argue</div>
- Your main argument is <span class="highlight">"taste matters for founders"</span> — the two reasons hold up, but there's a leap at <code>line 6-7</code>. You went from "picking good ideas" to "innovation" without connecting them. <br><br>Try: why does <em>selection ability</em> lead to <em>creating something new</em>?
- </div>
- <div class="agent-msg assistant">
- <div class="agent-label">argue</div>
- Also, <code>line 5</code> claims operators <em>never</em> create — that's easy to attack. Consider narrowing it.
+ I found <span class="highlight">1 claim, 2 reasons, 1 gap</span>. Your structure is on the left.<br><br>The leap is at <code>line 7</code> — you defined taste as "picking good ideas" but concluded it's a "prerequisite for innovation." Why does <em>selecting well</em> lead to <em>creating something new</em>?
  </div>
  </div>
  <div class="agent-input-area">
- <input type="text" class="agent-input" placeholder="Ask argue..." disabled data-i18n-placeholder="agent-placeholder">
- <div class="agent-input-hint" data-i18n="agent-hint">⌘ Enter to send</div>
+ <textarea class="agent-input" placeholder="dump your thoughts here..." disabled rows="3" data-i18n-placeholder="agent-placeholder"></textarea>
+ <div class="agent-input-hint" data-i18n="agent-hint">⌘ Enter to compile</div>
  </div>
  </div>
  </div>
@@ -835,11 +807,13 @@ const i18n = {
  'hero-title': '把想法倒出來。<br>邏輯交給<em>我們。</em>',
  'hero-sub': '直接寫你在想的東西。Argue 會讀你的草稿、自動拆解論述結構，告訴你哪裡的推理斷掉了——讓你在別人讀到之前就修好。',
  'hero-cta': '加入候補名單 <span class="arrow">→</span>',
- 'editor-body': '<div class="editor-line"><span class="editor-line-num">1</span><span class="editor-line-text">我覺得品味對創辦人超級重要。就是，</span></div><div class="editor-line"><span class="editor-line-num">2</span><span class="editor-line-text">執行者只會維持現狀，但建造者要決定</span></div><div class="editor-line"><span class="editor-line-num">3</span><span class="editor-line-text">到底要做什麼。品味基本上就是從 100 個</span></div><div class="editor-line"><span class="editor-line-num">4</span><span class="editor-line-text">想法裡面挑出 3 個好的那種能力。</span></div><div class="editor-line has-warning"><span class="editor-line-num">5</span><span class="editor-line-text">執行者不會真的創造新東西，他們就是優化。</span></div><div class="inline-annotation warn"><span class="annotation-icon">⚠</span><span class="annotation-text"><strong>範圍過廣</strong> —「執行者不會創造新東西」— 永遠成立嗎？</span></div><div class="editor-line has-error"><span class="editor-line-num">6</span><span class="editor-line-text">所以品味基本上就是創新的前提吧我覺得</span></div><div class="inline-annotation error"><span class="annotation-icon">✗</span><span class="annotation-text"><strong>邏輯斷裂</strong> — 你把品味定義為「挑選好想法」但直接跳到「創新的前提」— 為什麼選得好就等於能創新？</span></div>',
+ 'ide-title': 'draft.argue — 編譯輸出',
+ 'editor-body': '<div class="editor-line"><span class="editor-line-num">1</span><span class="editor-line-text"><span class="keyword">claim</span> <span class="string">「品味對創辦人很重要」</span> {</span></div><div class="editor-line"><span class="editor-line-num">2</span><span class="editor-line-text">  <span class="type">reason</span> <span class="string">「建造者決定要做什麼」</span></span></div><div class="editor-line"><span class="editor-line-num">3</span><span class="editor-line-text">  <span class="type">reason</span> <span class="string">「品味 = 從 100 個想法挑 3 個好的」</span></span></div><div class="editor-line"><span class="editor-line-num">4</span><span class="editor-line-text"></span></div><div class="editor-line has-warning"><span class="editor-line-num">5</span><span class="editor-line-text">  <span class="type">reason</span> <span class="string">「執行者不會創造新東西」</span></span></div><div class="inline-annotation warn"><span class="annotation-icon">⚠</span><span class="annotation-text">範圍過廣 — 永遠成立嗎？</span></div><div class="editor-line"><span class="editor-line-num">6</span><span class="editor-line-text"></span></div><div class="editor-line has-error"><span class="editor-line-num">7</span><span class="editor-line-text">  <span class="keyword">therefore</span> <span class="string">「品味是創新的前提」</span></span></div><div class="inline-annotation error"><span class="annotation-icon">✗</span><span class="annotation-text">邏輯斷裂 —「挑選好想法」≠「創新」</span></div><div class="editor-line"><span class="editor-line-num">8</span><span class="editor-line-text">}</span></div>',
+ 'editor-status': '<span class="keyword">1 個錯誤</span><span class="dim">、</span><span class="type">1 個警告</span><span class="dim"> — 發布前請修正</span>',
  'agent-bar': 'argue 助手',
- 'agent-body': '<div class="agent-msg system">編譯完成：<span class="keyword">1 個錯誤</span>、<span class="type">1 個警告</span></div><div class="agent-msg assistant"><div class="agent-label">argue</div>你的主要論點是<span class="highlight">「品味對創辦人很重要」</span>——兩個理由站得住，但 <code>第 6 行</code>有個跳躍。你從「挑選好想法」直接到「創新」，中間缺少連結。<br><br>試試看：為什麼<em>選擇能力</em>會帶來<em>創造新東西</em>？</div><div class="agent-msg assistant"><div class="agent-label">argue</div>另外，<code>第 5 行</code>說執行者<em>絕不</em>創造——這很容易被攻擊。考慮縮小範圍。</div>',
- 'agent-placeholder': '問 argue...',
- 'agent-hint': '⌘ Enter 送出',
+ 'agent-body': '<div class="agent-msg user">我覺得品味對創辦人超級重要。就是，執行者只會維持現狀，但建造者要決定到底要做什麼。品味基本上就是從 100 個想法裡面挑出 3 個好的那種能力。執行者不會真的創造新東西，他們就是優化而已。所以品味基本上就是創新的前提吧我覺得</div><div class="agent-msg assistant"><div class="agent-label">argue</div>找到 <span class="highlight">1 個主張、2 個理由、1 個斷裂</span>。結構在左邊。<br><br>跳躍在 <code>第 7 行</code> — 你把品味定義為「挑選好想法」但結論是「創新的前提」。為什麼<em>選得好</em>就等於<em>能創新</em>？</div>',
+ 'agent-placeholder': '把想法倒在這裡...',
+ 'agent-hint': '⌘ Enter 編譯',
  'features-label': '// 怎麼用',
  'f1-title': '想到什麼寫什麼',
  'f1-desc': '把你的想法倒出來——亂的、沒寫完的、意識流的都行。不用管結構，那是 Argue 的事。',
