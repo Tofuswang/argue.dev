@@ -469,20 +469,20 @@ font-size: 16px;
  <div class="terminal-dot"></div>
  <div class="terminal-dot"></div>
  <div class="terminal-dot"></div>
- <span class="terminal-title">essay.arg — argue compiler v0.1</span>
+ <span class="terminal-title" data-i18n="term-title">essay.arg — argue compiler v0.1</span>
  </div>
  <div class="terminal-body">
  <div class="line">
  <span class="line-num">1</span>
- <span><span class="comment">// Define your terms first</span></span>
+ <span data-i18n="term-l1"><span class="comment">// Define your terms first</span></span>
  </div>
  <div class="line">
  <span class="line-num">2</span>
- <span><span class="keyword">define</span> <span class="type">Taste</span> = <span class="string">"the ability to choose 3 things out of 100"</span></span>
+ <span data-i18n="term-l2"><span class="keyword">define</span> <span class="type">Taste</span> = <span class="string">"the ability to choose 3 things out of 100"</span></span>
  </div>
  <div class="line">
  <span class="line-num">3</span>
- <span><span class="keyword">define</span> <span class="type">Builder</span> = <span class="string">"someone who creates infrastructure for others"</span></span>
+ <span data-i18n="term-l3"><span class="keyword">define</span> <span class="type">Builder</span> = <span class="string">"someone who creates infrastructure for others"</span></span>
  </div>
  <div class="line">
  <span class="line-num">4</span>
@@ -490,11 +490,11 @@ font-size: 16px;
  </div>
  <div class="line">
  <span class="line-num">5</span>
- <span><span class="comment">// State your claim</span></span>
+ <span data-i18n="term-l5"><span class="comment">// State your claim</span></span>
  </div>
  <div class="line">
  <span class="line-num">6</span>
- <span><span class="keyword">claim</span> <span class="fn">main</span>: <span class="string">"Taste is what separates builders from operators"</span></span>
+ <span data-i18n="term-l6"><span class="keyword">claim</span> <span class="fn">main</span>: <span class="string">"Taste is what separates builders from operators"</span></span>
  </div>
  <div class="line">
  <span class="line-num">7</span>
@@ -502,23 +502,23 @@ font-size: 16px;
  </div>
  <div class="line">
  <span class="line-num">8</span>
- <span><span class="comment">// Support it</span></span>
+ <span data-i18n="term-l8"><span class="comment">// Support it</span></span>
  </div>
  <div class="line">
  <span class="line-num">9</span>
- <span><span class="keyword">because</span> <span class="string">"operators optimize existing systems"</span></span>
+ <span data-i18n="term-l9"><span class="keyword">because</span> <span class="string">"operators optimize existing systems"</span></span>
  </div>
  <div class="line">
  <span class="line-num">10</span>
- <span><span class="keyword">because</span> <span class="string">"builders decide what systems should exist"</span></span>
+ <span data-i18n="term-l10"><span class="keyword">because</span> <span class="string">"builders decide what systems should exist"</span></span>
  </div>
  <div class="line">
  <span class="line-num">11</span>
- <span class="error-line"><span class="keyword">therefore</span> <span class="string">"taste is a prerequisite for innovation"</span></span>
+ <span class="error-line" data-i18n="term-l11"><span class="keyword">therefore</span> <span class="string">"taste is a prerequisite for innovation"</span></span>
  </div>
  <div class="line">
  <span class="line-num">12</span>
- <span><span class="keyword">scope</span> <span class="dim">= early-stage startups, not enterprise</span></span>
+ <span data-i18n="term-l12"><span class="keyword">scope</span> <span class="dim">= early-stage startups, not enterprise</span></span>
  </div>
  </div>
  </div>
@@ -601,8 +601,19 @@ const i18n = {
  'hero-title': '你的邏輯有 bug。<br>現在你可以<em>修好它。</em>',
  'hero-sub': 'Argue 是一個論述編譯器——在你發布之前，幫你抓出未定義的術語、斷裂的推理鏈和邏輯漏洞。把它想成你思考的 linter。',
  'hero-cta': '加入候補名單 <span class="arrow">→</span>',
+ 'term-title': '論述.arg — argue 編譯器 v0.1',
+ 'term-l1': '<span class="comment">// 先定義你的術語</span>',
+ 'term-l2': '<span class="keyword">define</span> <span class="type">品味</span> = <span class="string">"從 100 個選項中選出 3 個的能力"</span>',
+ 'term-l3': '<span class="keyword">define</span> <span class="type">建造者</span> = <span class="string">"為他人建立基礎設施的人"</span>',
+ 'term-l5': '<span class="comment">// 陳述你的主張</span>',
+ 'term-l6': '<span class="keyword">claim</span> <span class="fn">main</span>: <span class="string">"品味是區分建造者與執行者的關鍵"</span>',
+ 'term-l8': '<span class="comment">// 支持你的論點</span>',
+ 'term-l9': '<span class="keyword">because</span> <span class="string">"執行者優化現有系統"</span>',
+ 'term-l10': '<span class="keyword">because</span> <span class="string">"建造者決定什麼系統該存在"</span>',
+ 'term-l11': '<span class="keyword">therefore</span> <span class="string">"品味是創新的前提"</span>',
+ 'term-l12': '<span class="keyword">scope</span> <span class="dim">= 早期新創，非大企業</span>',
  'error-1': '<span class="error-icon">✗</span> <strong>第 11 行</strong> — <span class="keyword">型別不符</span>：「品味」被定義為選擇能力，但「創新」從未被定義。無法推斷因果關係。',
- 'error-2': '<span class="warn-icon">⚠</span> <strong>第 6 行</strong> — <span class="type">未定義術語</span>：「operators」在主張中使用但未在 <span class="keyword">define</span> 區塊中定義。',
+ 'error-2': '<span class="warn-icon">⚠</span> <strong>第 6 行</strong> — <span class="type">未定義術語</span>：「執行者」在主張中使用但未在 <span class="keyword">define</span> 區塊中定義。',
  'error-summary': '<span class="dim">發現 <strong>1 個錯誤</strong>、<strong>1 個警告</strong>。發布前請修正。</span>',
  'features-label': '// 如何運作',
  'f1-title': '定義你的型別',
