@@ -540,36 +540,9 @@ padding: 12px;
 border-top: 1px solid var(--border);
 }
 
-textarea.agent-input {
-width: 100%;
-background: rgba(255,255,255,0.03);
-border: 1px solid var(--border);
-border-radius: 6px;
-padding: 10px 12px;
-color: var(--text);
-font-family: var(--mono);
-font-size: 12px;
-resize: none;
-outline: none;
-transition: border-color 0.2s;
-line-height: 1.6;
-}
-
-.agent-input::placeholder {
-color: var(--text-dim);
-opacity: 0.5;
-}
-
-.agent-input:focus {
-border-color: var(--accent);
-}
-
-.agent-input-hint {
-font-size: 10px;
-color: var(--text-dim);
-opacity: 0.4;
-margin-top: 6px;
-text-align: right;
+.agent-msg.draft {
+opacity: 0.6;
+border-style: dashed;
 }
 
 .agent-send-btn {
@@ -905,10 +878,11 @@ display: none;
  <!-- Agent panel (right) — braindump + conversation -->
  <div class="agent-panel">
  <div class="agent-bar" data-i18n="agent-bar">argue agent</div>
- <div class="agent-body" id="agentBody"></div>
+ <div class="agent-body" id="agentBody">
+  <div class="agent-msg user draft" id="demoDraft" data-i18n="demo-draft">I think taste is super important for founders. like, operators just keep things running but builders actually decide what to build. taste is basically picking the 3 good ideas out of 100. operators don't really create anything new, they just optimize. so yeah taste is basically a prerequisite for innovation I think</div>
+ </div>
  <div class="agent-input-area">
- <textarea class="agent-input" id="agentInput" rows="2" readonly></textarea>
- <button class="agent-send-btn" id="agentSendBtn" data-i18n="agent-send">Send to Argue →</button>
+  <button class="agent-send-btn" id="agentSendBtn" data-i18n="agent-send">Send to Argue →</button>
  </div>
  </div>
  </div>
@@ -988,6 +962,7 @@ const i18n = {
  'editor-hint': '// 等待輸入中...',
  'compile-btn': '▶ 編譯',
  'agent-bar': 'argue 助手',
+ 'demo-draft': '我覺得品味對創辦人超級重要。就是，執行者只會維持現狀，但建造者要決定到底要做什麼。品味基本上就是從 100 個想法裡面挑出 3 個好的那種能力。執行者不會真的創造新東西，他們就是優化而已。所以品味基本上就是創新的前提吧我覺得',
  'agent-send': '送出給 Argue →',
  'features-label': '// 怎麼用',
  'f1-title': '想到什麼寫什麼',
@@ -1012,12 +987,8 @@ const toggle = document.getElementById('langToggle');
 
 // Store original English content
 const originals = {};
-const originalPlaceholders = {};
 document.querySelectorAll('[data-i18n]').forEach(el => {
  originals[el.dataset.i18n] = el.innerHTML;
-});
-document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
- originalPlaceholders[el.dataset.i18nPlaceholder] = el.placeholder;
 });
 
 toggle.addEventListener('click', () => {
@@ -1028,11 +999,6 @@ toggle.addEventListener('click', () => {
   el.innerHTML = i18n['zh-TW'][el.dataset.i18n];
   }
  });
- document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
-  if (i18n['zh-TW'][el.dataset.i18nPlaceholder]) {
-  el.placeholder = i18n['zh-TW'][el.dataset.i18nPlaceholder];
-  }
- });
  toggle.textContent = 'EN';
  document.documentElement.lang = 'zh-TW';
  } else {
@@ -1040,11 +1006,6 @@ toggle.addEventListener('click', () => {
  document.querySelectorAll('[data-i18n]').forEach(el => {
   if (originals[el.dataset.i18n]) {
   el.innerHTML = originals[el.dataset.i18n];
-  }
- });
- document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
-  if (originalPlaceholders[el.dataset.i18nPlaceholder]) {
-  el.placeholder = originalPlaceholders[el.dataset.i18nPlaceholder];
   }
  });
  toggle.textContent = '中文';
@@ -1099,8 +1060,8 @@ const demoContent = {
 let demoPhase = 'idle'; // idle → submitted → generating → awaiting-compile → done
 let codeTimer = null;
 
-const agentInput = document.getElementById('agentInput');
 const agentBody = document.getElementById('agentBody');
+const demoDraft = document.getElementById('demoDraft');
 const editorBody = document.getElementById('editorBody');
 const issuesList = document.getElementById('issuesList');
 const issuesBar = document.getElementById('issuesBar');
@@ -1112,94 +1073,87 @@ function getContent() {
  return demoContent[currentLang === 'zh-TW' ? 'zh-TW' : 'en'];
 }
 
-function prefillTextarea() {
- agentInput.value = getContent().braindump;
-}
-
 function resetDemo() {
  if (codeTimer) { clearInterval(codeTimer); codeTimer = null; }
-
  demoPhase = 'idle';
 
- // Reset UI
+ // Restore draft message and send button
+ const content = getContent();
  agentBody.innerHTML = '';
- editorBody.innerHTML = '';
- issuesList.innerHTML = '';
+ const draft = document.createElement('div');
+ draft.className = 'agent-msg user draft';
+ draft.id = 'demoDraft';
+ draft.textContent = content.braindump;
+ agentBody.appendChild(draft);
 
- // Pre-fill textarea with braindump and show input area
- agentInput.style.display = '';
- sendBtn.style.display = '';
  sendBtn.disabled = false;
- prefillTextarea();
+ sendBtn.style.display = '';
 
- // Reset hint
+ // Reset editor
+ editorBody.innerHTML = '';
  const hintText = currentLang === 'zh-TW' ? '// 等待輸入中...' : '// waiting for input...';
  editorBody.innerHTML = '<div class="editor-empty-hint">' + hintText + '</div>';
 
- // Reset issues bar
+ // Reset issues
+ issuesList.innerHTML = '';
  const issuesLabel = currentLang === 'zh-TW' ? '問題' : 'Issues';
  issuesBar.innerHTML = issuesLabel;
 
  // Reset compile button
  compileBtn.disabled = true;
  compileBtn.classList.remove('ready', 'done');
- const btnText = currentLang === 'zh-TW' ? '▶ 編譯' : '▶ Compile';
- compileBtn.textContent = btnText;
+ compileBtn.textContent = currentLang === 'zh-TW' ? '▶ 編譯' : '▶ Compile';
  compileBtn.style.opacity = '0.4';
 }
 
-// Pre-fill on page load
-prefillTextarea();
-
 // Send button click → run demo
-sendBtn.addEventListener('click', () => {
+sendBtn.addEventListener('click', function() {
  if (demoPhase !== 'idle') return;
  demoPhase = 'submitted';
 
- const content = getContent();
- const text = agentInput.value;
+ var content = getContent();
 
- // Hide input area
- agentInput.style.display = 'none';
+ // Activate the draft message (remove draft styling)
+ var draftEl = document.getElementById('demoDraft');
+ if (draftEl) {
+  draftEl.classList.remove('draft');
+  draftEl.id = '';
+ }
+
+ // Hide send button
  sendBtn.style.display = 'none';
 
- // Show user message
- const userMsg = document.createElement('div');
- userMsg.className = 'agent-msg user animate-in';
- userMsg.textContent = text;
- agentBody.appendChild(userMsg);
-
  // After a beat, show thinking
- setTimeout(() => {
- const thinking = document.createElement('div');
- thinking.className = 'agent-msg assistant animate-in';
- thinking.id = 'demoThinking';
- thinking.innerHTML = '<div class="agent-label">argue</div><span class="thinking-dots">analyzing structure</span>';
- agentBody.appendChild(thinking);
- agentBody.scrollTop = agentBody.scrollHeight;
-
- // Remove hint and start generating code
- setTimeout(() => {
-  editorBody.innerHTML = '';
-  demoPhase = 'generating';
-  generateCode(content, () => {
-  // Remove thinking, show agent response
-  const thinkingEl = document.getElementById('demoThinking');
-  if (thinkingEl) thinkingEl.remove();
-
-  const assistantMsg = document.createElement('div');
-  assistantMsg.className = 'agent-msg assistant animate-in';
-  assistantMsg.innerHTML = '<div class="agent-label">argue</div>' + content.agentResponse;
-  agentBody.appendChild(assistantMsg);
+ setTimeout(function() {
+  var thinking = document.createElement('div');
+  thinking.className = 'agent-msg assistant animate-in';
+  thinking.id = 'demoThinking';
+  thinking.innerHTML = '<div class="agent-label">argue</div><span class="thinking-dots">analyzing structure</span>';
+  agentBody.appendChild(thinking);
   agentBody.scrollTop = agentBody.scrollHeight;
 
-  // Enable compile button
-  compileBtn.classList.add('ready');
-  compileBtn.disabled = false;
-  compileBtn.style.opacity = '1';
-  demoPhase = 'awaiting-compile';
+  // Start generating code
+  setTimeout(function() {
+  editorBody.innerHTML = '';
+  demoPhase = 'generating';
+  generateCode(content, function() {
+   // Remove thinking, show agent response
+   var thinkingEl = document.getElementById('demoThinking');
+   if (thinkingEl) thinkingEl.remove();
+
+   var assistantMsg = document.createElement('div');
+   assistantMsg.className = 'agent-msg assistant animate-in';
+   assistantMsg.innerHTML = '<div class="agent-label">argue</div>' + content.agentResponse;
+   agentBody.appendChild(assistantMsg);
+   agentBody.scrollTop = agentBody.scrollHeight;
+
+   // Enable compile button
+   compileBtn.classList.add('ready');
+   compileBtn.disabled = false;
+   compileBtn.style.opacity = '1';
+   demoPhase = 'awaiting-compile';
   });
- }, 800);
+  }, 800);
  }, 400);
 });
 
@@ -1286,7 +1240,7 @@ compileBtn.addEventListener('click', () => {
  issuesSidebar.classList.add('screaming');
  setTimeout(() => issuesSidebar.classList.remove('screaming'), 600);
  }, 300);
-}
+});
 </script>
 
 </body>
