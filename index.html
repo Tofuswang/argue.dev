@@ -262,6 +262,12 @@ opacity: 0.5;
 .type { color: var(--yellow); }
 .fn { color: var(--blue); }
 .dim { color: var(--text-dim); }
+.highlight-warn {
+background: rgba(234, 179, 8, 0.1);
+margin: 0 -24px;
+padding: 0 24px;
+border-left: 2px solid var(--yellow);
+}
 .error-line {
 background: rgba(244, 63, 94, 0.08);
 margin: 0 -24px;
@@ -287,15 +293,78 @@ to { opacity: 1; transform: translateY(0); }
 .line:nth-child(11) { animation-delay: 1.3s; }
 .line:nth-child(12) { animation-delay: 1.4s; }
 
-/* Error output */
+/* Compile output */
 .compile-output {
 margin: 0 0 64px;
-padding: 20px 24px;
-border: 1px solid rgba(244, 63, 94, 0.3);
+border: 1px solid var(--border);
 border-radius: 8px;
-background: rgba(244, 63, 94, 0.04);
+overflow: hidden;
+background: var(--surface);
 font-size: 13px;
 line-height: 2;
+}
+
+.compile-output-bar {
+padding: 10px 16px;
+font-size: 11px;
+color: var(--text-dim);
+border-bottom: 1px solid var(--border);
+background: rgba(255,255,255,0.02);
+display: flex;
+align-items: center;
+gap: 6px;
+}
+
+.compile-output-bar::before {
+content: '▶';
+font-size: 8px;
+color: var(--green);
+}
+
+.compile-section {
+padding: 20px 24px;
+}
+
+.compile-section + .compile-section {
+border-top: 1px solid var(--border);
+}
+
+.compile-section-label {
+font-size: 11px;
+letter-spacing: 0.1em;
+text-transform: uppercase;
+color: var(--text-dim);
+margin-bottom: 12px;
+}
+
+.structure-item {
+display: flex;
+gap: 10px;
+align-items: baseline;
+margin-bottom: 4px;
+}
+
+.structure-tag {
+font-size: 11px;
+padding: 1px 6px;
+border-radius: 3px;
+font-weight: 500;
+white-space: nowrap;
+}
+
+.tag-claim { background: rgba(59, 130, 246, 0.15); color: var(--blue); }
+.tag-reason { background: rgba(34, 197, 94, 0.15); color: var(--green); }
+.tag-gap { background: rgba(244, 63, 94, 0.15); color: var(--accent); }
+
+.structure-text {
+color: var(--text-dim);
+font-weight: 300;
+}
+
+.compile-errors {
+padding: 20px 24px;
+border-top: 1px solid var(--border);
+background: rgba(244, 63, 94, 0.03);
 }
 
 .compile-output .error-icon {
@@ -457,9 +526,9 @@ font-size: 16px;
 
  <section class="hero">
  <div class="hero-label" data-i18n="hero-label">A new kind of writing tool</div>
- <h1 data-i18n="hero-title">Your logic has bugs.<br>Now you can <em>fix them.</em></h1>
+ <h1 data-i18n="hero-title">Dump your thoughts.<br>We'll find the <em>logic.</em></h1>
  <p class="hero-sub" data-i18n="hero-sub">
- Argue is a compiler for written arguments — it catches undefined terms, broken reasoning chains, and logical gaps before you publish. Think of it as a linter for your thinking.
+ Just write what you're thinking. Argue reads your messy draft, extracts the argument structure, and tells you where the reasoning breaks — so you can fix it before anyone else reads it.
  </p>
  <a href="#waitlist" class="hero-cta" data-i18n="hero-cta">Join the waitlist <span class="arrow">→</span></a>
  </section>
@@ -469,66 +538,70 @@ font-size: 16px;
  <div class="terminal-dot"></div>
  <div class="terminal-dot"></div>
  <div class="terminal-dot"></div>
- <span class="terminal-title" data-i18n="term-title">essay.arg — argue compiler v0.1</span>
+ <span class="terminal-title" data-i18n="term-title">Your draft</span>
  </div>
- <div class="terminal-body">
+ <div class="terminal-body" data-i18n="term-body">
  <div class="line">
  <span class="line-num">1</span>
- <span data-i18n="term-l1"><span class="comment">// Define your terms first</span></span>
+ <span>I think taste is super important for founders.</span>
  </div>
  <div class="line">
  <span class="line-num">2</span>
- <span data-i18n="term-l2"><span class="keyword">define</span> <span class="type">Taste</span> = <span class="string">"the ability to choose 3 things out of 100"</span></span>
+ <span>like, operators just keep things running but</span>
  </div>
  <div class="line">
  <span class="line-num">3</span>
- <span data-i18n="term-l3"><span class="keyword">define</span> <span class="type">Builder</span> = <span class="string">"someone who creates infrastructure for others"</span></span>
+ <span>builders actually decide what to build. taste is</span>
  </div>
  <div class="line">
  <span class="line-num">4</span>
- <span></span>
+ <span>basically picking the 3 good ideas out of 100.</span>
  </div>
  <div class="line">
  <span class="line-num">5</span>
- <span data-i18n="term-l5"><span class="comment">// State your claim</span></span>
+ <span>operators don't really create anything new, they</span>
  </div>
  <div class="line">
  <span class="line-num">6</span>
- <span data-i18n="term-l6"><span class="keyword">claim</span> <span class="fn">main</span>: <span class="string">"Taste is what separates builders from operators"</span></span>
+ <span>just optimize. so yeah taste is basically a</span>
  </div>
  <div class="line">
  <span class="line-num">7</span>
- <span></span>
- </div>
- <div class="line">
- <span class="line-num">8</span>
- <span data-i18n="term-l8"><span class="comment">// Support it</span></span>
- </div>
- <div class="line">
- <span class="line-num">9</span>
- <span data-i18n="term-l9"><span class="keyword">because</span> <span class="string">"operators optimize existing systems"</span></span>
- </div>
- <div class="line">
- <span class="line-num">10</span>
- <span data-i18n="term-l10"><span class="keyword">because</span> <span class="string">"builders decide what systems should exist"</span></span>
- </div>
- <div class="line">
- <span class="line-num">11</span>
- <span class="error-line" data-i18n="term-l11"><span class="keyword">therefore</span> <span class="string">"taste is a prerequisite for innovation"</span></span>
- </div>
- <div class="line">
- <span class="line-num">12</span>
- <span data-i18n="term-l12"><span class="keyword">scope</span> <span class="dim">= early-stage startups, not enterprise</span></span>
+ <span>prerequisite for innovation I think</span>
  </div>
  </div>
  </div>
 
  <div class="compile-output">
- <div data-i18n="error-1"><span class="error-icon">✗</span> <strong>Line 11</strong> — <span class="keyword">type mismatch</span>: "taste" was defined as selection ability, but "innovation" was never defined. Cannot infer causal link.</div>
+ <div class="compile-output-bar" data-i18n="compile-bar">argue compiled your draft</div>
+
+ <div class="compile-section">
+ <div class="compile-section-label" data-i18n="structure-label">Extracted structure</div>
+ <div class="structure-item">
+ <span class="structure-tag tag-claim" data-i18n="struct-1-tag">CLAIM</span>
+ <span class="structure-text" data-i18n="struct-1">"Taste is important for founders"</span>
+ </div>
+ <div class="structure-item">
+ <span class="structure-tag tag-reason" data-i18n="struct-2-tag">REASON</span>
+ <span class="structure-text" data-i18n="struct-2">"Builders decide what to build; operators only optimize"</span>
+ </div>
+ <div class="structure-item">
+ <span class="structure-tag tag-reason" data-i18n="struct-3-tag">REASON</span>
+ <span class="structure-text" data-i18n="struct-3">"Taste = selecting 3 good ideas out of 100"</span>
+ </div>
+ <div class="structure-item">
+ <span class="structure-tag tag-gap" data-i18n="struct-4-tag">GAP</span>
+ <span class="structure-text" data-i18n="struct-4">"Taste → innovation" — link never established</span>
+ </div>
+ </div>
+
+ <div class="compile-errors">
+ <div data-i18n="error-1"><span class="error-icon">✗</span> You jump from "taste = picking ideas" to "taste is needed for innovation" but never explain why selecting well leads to innovating.</div>
  <br>
- <div data-i18n="error-2"><span class="warn-icon">⚠</span> <strong>Line 6</strong> — <span class="type">undefined term</span>: "operators" used in claim but not in <span class="keyword">define</span> block.</div>
+ <div data-i18n="error-2"><span class="warn-icon">⚠</span> "Operators don't create anything new" — always true? This might be too broad. Consider narrowing the scope.</div>
  <br>
  <div data-i18n="error-summary"><span class="dim">Found <strong>1 error</strong>, <strong>1 warning</strong>. Fix before publishing.</span></div>
+ </div>
  </div>
 
  <section class="features">
@@ -537,32 +610,32 @@ font-size: 16px;
  <div class="feature">
  <div class="feature-icon">①</div>
  <div>
- <h3 data-i18n="f1-title">Define your types</h3>
- <p data-i18n="f1-desc">Every key term gets a definition node. Use a word without defining it? That's an undefined variable. The compiler catches it before your reader does.</p>
+ <h3 data-i18n="f1-title">Brain dump</h3>
+ <p data-i18n="f1-desc">Just pour out your thoughts — messy, unfinished, stream-of-consciousness. Don't worry about structure. That's Argue's job.</p>
  </div>
  </div>
 
  <div class="feature">
  <div class="feature-icon">②</div>
  <div>
- <h3 data-i18n="f2-title">Connect your logic</h3>
- <p data-i18n="f2-desc">Link claims to reasons, reasons to evidence. If there's a gap in the chain — a premise that leads nowhere, a conclusion without support — the compiler flags it.</p>
+ <h3 data-i18n="f2-title">See the structure</h3>
+ <p data-i18n="f2-desc">Argue reads your draft and extracts the argument skeleton automatically — claims, reasons, evidence, and the gaps between them.</p>
  </div>
  </div>
 
  <div class="feature">
  <div class="feature-icon">③</div>
  <div>
- <h3 data-i18n="f3-title">Compile and check</h3>
- <p data-i18n="f3-desc">Hit compile. Structural errors (missing definitions, broken chains) get caught instantly. Deep logic checks (does A actually imply B?) are powered by the most advanced AI models available.</p>
+ <h3 data-i18n="f3-title">Fix your reasoning</h3>
+ <p data-i18n="f3-desc">Get actionable feedback: "You defined X as Y, but then concluded Z without connecting them." Fix the logic, not just the grammar.</p>
  </div>
  </div>
 
  <div class="feature">
  <div class="feature-icon">④</div>
  <div>
- <h3 data-i18n="f4-title">Export as prose</h3>
- <p data-i18n="f4-desc">Once your argument compiles clean, export it as a readable essay, a Twitter thread, a presentation — same logic skeleton, different output formats.</p>
+ <h3 data-i18n="f4-title">Publish with confidence</h3>
+ <p data-i18n="f4-desc">Once your argument passes all checks, export it as a polished essay, a Twitter thread, or a presentation — same solid reasoning, different formats.</p>
  </div>
  </div>
  </section>
@@ -598,32 +671,33 @@ const i18n = {
  'zh-TW': {
  'nav-status': '公開建造中',
  'hero-label': '一種全新的寫作工具',
- 'hero-title': '你的邏輯有 bug。<br>現在你可以<em>修好它。</em>',
- 'hero-sub': 'Argue 是一個論述編譯器——在你發布之前，幫你抓出未定義的術語、斷裂的推理鏈和邏輯漏洞。把它想成你思考的 linter。',
+ 'hero-title': '把想法倒出來。<br>邏輯交給<em>我們。</em>',
+ 'hero-sub': '直接寫你在想的東西。Argue 會讀你的草稿、自動拆解論述結構，告訴你哪裡的推理斷掉了——讓你在別人讀到之前就修好。',
  'hero-cta': '加入候補名單 <span class="arrow">→</span>',
- 'term-title': '論述.arg — argue 編譯器 v0.1',
- 'term-l1': '<span class="comment">// 先定義你的術語</span>',
- 'term-l2': '<span class="keyword">define</span> <span class="type">品味</span> = <span class="string">"從 100 個選項中選出 3 個的能力"</span>',
- 'term-l3': '<span class="keyword">define</span> <span class="type">建造者</span> = <span class="string">"為他人建立基礎設施的人"</span>',
- 'term-l5': '<span class="comment">// 陳述你的主張</span>',
- 'term-l6': '<span class="keyword">claim</span> <span class="fn">main</span>: <span class="string">"品味是區分建造者與執行者的關鍵"</span>',
- 'term-l8': '<span class="comment">// 支持你的論點</span>',
- 'term-l9': '<span class="keyword">because</span> <span class="string">"執行者優化現有系統"</span>',
- 'term-l10': '<span class="keyword">because</span> <span class="string">"建造者決定什麼系統該存在"</span>',
- 'term-l11': '<span class="keyword">therefore</span> <span class="string">"品味是創新的前提"</span>',
- 'term-l12': '<span class="keyword">scope</span> <span class="dim">= 早期新創，非大企業</span>',
- 'error-1': '<span class="error-icon">✗</span> <strong>第 11 行</strong> — <span class="keyword">型別不符</span>：「品味」被定義為選擇能力，但「創新」從未被定義。無法推斷因果關係。',
- 'error-2': '<span class="warn-icon">⚠</span> <strong>第 6 行</strong> — <span class="type">未定義術語</span>：「執行者」在主張中使用但未在 <span class="keyword">define</span> 區塊中定義。',
+ 'term-title': '你的草稿',
+ 'term-body': '<div class="line"><span class="line-num">1</span><span>我覺得品味對創辦人超級重要。就是，</span></div><div class="line"><span class="line-num">2</span><span>執行者只會維持現狀，但建造者要決定</span></div><div class="line"><span class="line-num">3</span><span>到底要做什麼。品味基本上就是從 100 個</span></div><div class="line"><span class="line-num">4</span><span>想法裡面挑出 3 個好的那種能力。執行者</span></div><div class="line"><span class="line-num">5</span><span>不會真的創造新東西，他們就是優化而已。</span></div><div class="line"><span class="line-num">6</span><span>所以品味基本上就是創新的前提吧我覺得</span></div>',
+ 'compile-bar': 'argue 編譯了你的草稿',
+ 'structure-label': '擷取的結構',
+ 'struct-1-tag': '主張',
+ 'struct-1': '「品味對創辦人很重要」',
+ 'struct-2-tag': '理由',
+ 'struct-2': '「建造者決定做什麼；執行者只是優化」',
+ 'struct-3-tag': '理由',
+ 'struct-3': '「品味 = 從 100 個想法中選出 3 個好的」',
+ 'struct-4-tag': '斷裂',
+ 'struct-4': '「品味 → 創新」——從未建立連結',
+ 'error-1': '<span class="error-icon">✗</span> 你從「品味 = 挑選能力」跳到「品味是創新的前提」，但沒解釋為什麼選得好就等於能創新。',
+ 'error-2': '<span class="warn-icon">⚠</span>「執行者不會創造新東西」——永遠成立嗎？這個說法可能太廣。考慮限縮範圍。',
  'error-summary': '<span class="dim">發現 <strong>1 個錯誤</strong>、<strong>1 個警告</strong>。發布前請修正。</span>',
- 'features-label': '// 如何運作',
- 'f1-title': '定義你的型別',
- 'f1-desc': '每個關鍵術語都有一個定義節點。使用了未定義的詞？那就是未定義變數。編譯器會在讀者之前就抓到它。',
- 'f2-title': '連接你的邏輯',
- 'f2-desc': '將主張連結到理由，理由連結到證據。如果邏輯鏈有斷裂——某個前提沒有指向任何結論、某個結論缺乏支持——編譯器會標記出來。',
- 'f3-title': '編譯並檢查',
- 'f3-desc': '按下編譯。結構性錯誤（缺少定義、斷裂的邏輯鏈）會立即被捕捉。深層邏輯檢查（A 是否真的能推出 B？）由最先進的 AI 模型驅動。',
- 'f4-title': '輸出為文章',
- 'f4-desc': '當你的論述通過編譯，將它輸出為一篇可讀的文章、一串推文、一份簡報——同一個邏輯骨架，不同的輸出格式。',
+ 'features-label': '// 怎麼用',
+ 'f1-title': '想到什麼寫什麼',
+ 'f1-desc': '把你的想法倒出來——亂的、沒寫完的、意識流的都行。不用管結構，那是 Argue 的事。',
+ 'f2-title': '看見結構',
+ 'f2-desc': 'Argue 讀你的草稿，自動拆解出論述骨架——主張、理由、證據，還有它們之間的斷裂。',
+ 'f3-title': '修好推理',
+ 'f3-desc': '得到可執行的回饋：「你把 X 定義為 Y，但結論卻跳到 Z，兩者之間缺少連結。」修的是邏輯，不只是文法。',
+ 'f4-title': '安心發布',
+ 'f4-desc': '當你的論述通過所有檢查，把它輸出為一篇文章、一串推文、一份簡報——同樣紮實的推理，不同的格式。',
  'manifesto-label': '// 為什麼做這個',
  'manifesto-quote': '問題不是你不會思考。<br>而是沒有工具幫你<em>抓住</em>一個想法，長到足以完成它。',
  'manifesto-body': '寫作工具幫你產出文字。Argue 幫你產出推理。它不替你寫——它告訴你哪裡的思考斷了。就像編譯器拒絕執行有 bug 的程式碼，Argue 拒絕讓你發布有漏洞的邏輯。<br><br>為 ADHD 的大腦而生。為所有思考速度快過整理速度的人而生。為那些知道自己想說什麼、卻難以在紙上證明的人而生。',
