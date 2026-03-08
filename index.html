@@ -352,29 +352,94 @@ background: rgba(234, 179, 8, 0.04);
 background: rgba(244, 63, 94, 0.04);
 }
 
-/* Structure summary at bottom of editor */
-.editor-structure {
-padding: 12px 20px;
+/* Issues panel at bottom of editor */
+.issues-panel {
 border-top: 1px solid var(--border);
-font-size: 12px;
-color: var(--text-dim);
-display: flex;
-gap: 4px;
-flex-wrap: wrap;
 opacity: 0;
 animation: lineIn 0.4s ease forwards;
 animation-delay: 1.7s;
 }
 
-.struct-tag {
-padding: 2px 8px;
-border-radius: 3px;
-font-size: 11px;
+.issues-tab-bar {
+display: flex;
+align-items: center;
+padding: 0 16px;
+border-bottom: 1px solid var(--border);
+background: rgba(255,255,255,0.01);
+gap: 12px;
 }
 
-.struct-tag.claim { color: var(--blue); background: rgba(59,130,246,0.1); }
-.struct-tag.reason { color: var(--yellow); background: rgba(234,179,8,0.1); }
-.struct-tag.gap { color: var(--accent); background: rgba(244,63,94,0.1); }
+.issues-tab {
+font-size: 11px;
+color: var(--text-dim);
+padding: 8px 0;
+border-bottom: 1px solid transparent;
+margin-bottom: -1px;
+cursor: default;
+display: flex;
+align-items: center;
+gap: 6px;
+}
+
+.issues-tab.active {
+color: var(--text);
+border-bottom-color: var(--accent);
+}
+
+.issues-badge {
+font-size: 10px;
+padding: 0 5px;
+border-radius: 8px;
+line-height: 16px;
+}
+
+.issues-badge.error {
+background: rgba(244, 63, 94, 0.15);
+color: var(--accent);
+}
+
+.issues-badge.warn {
+background: rgba(234, 179, 8, 0.15);
+color: var(--yellow);
+}
+
+.issues-list {
+padding: 8px 0;
+}
+
+.issue-item {
+display: flex;
+align-items: flex-start;
+gap: 8px;
+padding: 4px 16px;
+font-size: 12px;
+line-height: 1.5;
+}
+
+.issue-item:hover {
+background: rgba(255,255,255,0.02);
+}
+
+.issue-icon {
+font-weight: 700;
+flex-shrink: 0;
+margin-top: 1px;
+}
+
+.issue-icon.error { color: var(--accent); }
+.issue-icon.warn { color: var(--yellow); }
+
+.issue-text {
+color: var(--text-dim);
+flex: 1;
+}
+
+.issue-loc {
+color: var(--text-dim);
+opacity: 0.5;
+font-size: 11px;
+flex-shrink: 0;
+}
 
 /* Agent panel (right) */
 .agent-panel {
@@ -724,8 +789,14 @@ display: none;
  <div class="editor-line has-error"><span class="editor-gutter"><span class="editor-line-num">7</span><span class="gutter-icon error">✗</span></span><span class="editor-line-text">  <span class="keyword">therefore</span> <span class="string">"taste is a prerequisite for innovation"</span></span><span class="line-diagnostic error">logical gap</span></div>
  <div class="editor-line"><span class="editor-gutter"><span class="editor-line-num">8</span><span class="gutter-icon"></span></span><span class="editor-line-text">}</span></div>
  </div>
- <div class="editor-structure" data-i18n="editor-status">
- <span class="keyword">1 error</span><span class="dim">,</span> <span class="type">1 warning</span><span class="dim"> — fix before publishing</span>
+ <div class="issues-panel" data-i18n="issues-panel">
+ <div class="issues-tab-bar">
+ <div class="issues-tab active">Problems <span class="issues-badge error">1</span> <span class="issues-badge warn">1</span></div>
+ </div>
+ <div class="issues-list">
+ <div class="issue-item"><span class="issue-icon error">✗</span><span class="issue-text">Logical gap — "picking good ideas" does not imply "innovation"</span><span class="issue-loc">:7</span></div>
+ <div class="issue-item"><span class="issue-icon warn">⚠</span><span class="issue-text">Scope too broad — "operators don't create anything new"</span><span class="issue-loc">:5</span></div>
+ </div>
  </div>
  </div>
  <!-- Agent panel (right) — braindump + conversation -->
@@ -817,7 +888,7 @@ const i18n = {
  'hero-cta': '加入候補名單 <span class="arrow">→</span>',
  'ide-title': 'draft.argue — 編譯輸出',
  'editor-body': '<div class="editor-line"><span class="editor-gutter"><span class="editor-line-num">1</span><span class="gutter-icon"></span></span><span class="editor-line-text"><span class="keyword">claim</span> <span class="string">「品味對創辦人很重要」</span> {</span></div><div class="editor-line"><span class="editor-gutter"><span class="editor-line-num">2</span><span class="gutter-icon"></span></span><span class="editor-line-text">  <span class="type">reason</span> <span class="string">「建造者決定要做什麼」</span></span></div><div class="editor-line"><span class="editor-gutter"><span class="editor-line-num">3</span><span class="gutter-icon"></span></span><span class="editor-line-text">  <span class="type">reason</span> <span class="string">「品味 = 從 100 個想法挑 3 個好的」</span></span></div><div class="editor-line"><span class="editor-gutter"><span class="editor-line-num">4</span><span class="gutter-icon"></span></span><span class="editor-line-text"></span></div><div class="editor-line has-warning"><span class="editor-gutter"><span class="editor-line-num">5</span><span class="gutter-icon warn">⚠</span></span><span class="editor-line-text">  <span class="type">reason</span> <span class="string">「執行者不會創造新東西」</span></span><span class="line-diagnostic warn">範圍過廣</span></div><div class="editor-line"><span class="editor-gutter"><span class="editor-line-num">6</span><span class="gutter-icon"></span></span><span class="editor-line-text"></span></div><div class="editor-line has-error"><span class="editor-gutter"><span class="editor-line-num">7</span><span class="gutter-icon error">✗</span></span><span class="editor-line-text">  <span class="keyword">therefore</span> <span class="string">「品味是創新的前提」</span></span><span class="line-diagnostic error">邏輯斷裂</span></div><div class="editor-line"><span class="editor-gutter"><span class="editor-line-num">8</span><span class="gutter-icon"></span></span><span class="editor-line-text">}</span></div>',
- 'editor-status': '<span class="keyword">1 個錯誤</span><span class="dim">、</span><span class="type">1 個警告</span><span class="dim"> — 發布前請修正</span>',
+ 'issues-panel': '<div class="issues-tab-bar"><div class="issues-tab active">問題 <span class="issues-badge error">1</span> <span class="issues-badge warn">1</span></div></div><div class="issues-list"><div class="issue-item"><span class="issue-icon error">✗</span><span class="issue-text">邏輯斷裂 —「挑選好想法」不等於「創新」</span><span class="issue-loc">:7</span></div><div class="issue-item"><span class="issue-icon warn">⚠</span><span class="issue-text">範圍過廣 —「執行者不會創造新東西」</span><span class="issue-loc">:5</span></div></div>',
  'agent-bar': 'argue 助手',
  'agent-body': '<div class="agent-msg user">我覺得品味對創辦人超級重要。就是，執行者只會維持現狀，但建造者要決定到底要做什麼。品味基本上就是從 100 個想法裡面挑出 3 個好的那種能力。執行者不會真的創造新東西，他們就是優化而已。所以品味基本上就是創新的前提吧我覺得</div><div class="agent-msg assistant"><div class="agent-label">argue</div>找到 <span class="highlight">1 個主張、2 個理由、1 個斷裂</span>。結構在左邊。<br><br>跳躍在 <code>第 7 行</code> — 你把品味定義為「挑選好想法」但結論是「創新的前提」。為什麼<em>選得好</em>就等於<em>能創新</em>？</div>',
  'agent-placeholder': '把想法倒在這裡...',
