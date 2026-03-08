@@ -571,6 +571,35 @@ margin-top: 6px;
 text-align: right;
 }
 
+.agent-send-btn {
+width: 100%;
+margin-top: 8px;
+padding: 10px 16px;
+font-family: var(--mono);
+font-size: 12px;
+font-weight: 500;
+letter-spacing: 0.05em;
+background: var(--accent);
+color: #fff;
+border: none;
+border-radius: 6px;
+cursor: pointer;
+transition: all 0.2s;
+}
+
+.agent-send-btn:hover {
+background: #e11d48;
+transform: translateY(-1px);
+box-shadow: 0 4px 16px rgba(244, 63, 94, 0.3);
+}
+
+.agent-send-btn:disabled {
+opacity: 0.3;
+cursor: not-allowed;
+transform: none;
+box-shadow: none;
+}
+
 .comment { color: var(--text-dim); font-style: italic; }
 .keyword { color: var(--accent); }
 .string { color: var(--green); }
@@ -876,8 +905,8 @@ display: none;
  <div class="agent-bar" data-i18n="agent-bar">argue agent</div>
  <div class="agent-body" id="agentBody"></div>
  <div class="agent-input-area">
- <textarea class="agent-input" id="agentInput" placeholder="dump your thoughts here..." rows="3" data-i18n-placeholder="agent-placeholder"></textarea>
- <div class="agent-input-hint" id="agentHint" data-i18n="agent-hint">Enter ↵ to send</div>
+ <textarea class="agent-input" id="agentInput" rows="3" readonly></textarea>
+ <button class="agent-send-btn" id="agentSendBtn" data-i18n="agent-send">Send to Argue →</button>
  </div>
  </div>
  </div>
@@ -957,8 +986,7 @@ const i18n = {
  'editor-hint': '// 等待輸入中...',
  'compile-btn': '▶ 編譯',
  'agent-bar': 'argue 助手',
- 'agent-placeholder': '把想法倒在這裡...',
- 'agent-hint': 'Enter ↵ 送出',
+ 'agent-send': '送出給 Argue →',
  'features-label': '// 怎麼用',
  'f1-title': '想到什麼寫什麼',
  'f1-desc': '把你的想法倒出來——亂的、沒寫完的、意識流的都行。不用管結構，那是 Argue 的事。',
@@ -1066,40 +1094,43 @@ const demoContent = {
  }
 };
 
-let demoPhase = 'idle'; // idle → typing → ready → submitted → generating → awaiting-compile → done
-let typeTimer = null;
+let demoPhase = 'idle'; // idle → submitted → generating → awaiting-compile → done
 let codeTimer = null;
 
 const agentInput = document.getElementById('agentInput');
 const agentBody = document.getElementById('agentBody');
 const editorBody = document.getElementById('editorBody');
-const editorHint = document.getElementById('editorHint');
 const issuesList = document.getElementById('issuesList');
 const issuesBar = document.getElementById('issuesBar');
 const issuesSidebar = document.getElementById('issuesSidebar');
 const compileBtn = document.getElementById('compileBtn');
+const sendBtn = document.getElementById('agentSendBtn');
 
 function getContent() {
  return demoContent[currentLang === 'zh-TW' ? 'zh-TW' : 'en'];
 }
 
+function prefillTextarea() {
+ agentInput.value = getContent().braindump;
+}
+
 function resetDemo() {
- // Clear timers
- if (typeTimer) { clearInterval(typeTimer); typeTimer = null; }
  if (codeTimer) { clearInterval(codeTimer); codeTimer = null; }
 
  demoPhase = 'idle';
 
  // Reset UI
- agentInput.value = '';
- agentInput.disabled = false;
  agentBody.innerHTML = '';
  editorBody.innerHTML = '';
  issuesList.innerHTML = '';
 
+ // Pre-fill textarea with braindump
+ prefillTextarea();
+ sendBtn.disabled = false;
+
  // Reset hint
  const hintText = currentLang === 'zh-TW' ? '// 等待輸入中...' : '// waiting for input...';
- editorBody.innerHTML = '<div class="editor-empty-hint" id="editorHint">' + hintText + '</div>';
+ editorBody.innerHTML = '<div class="editor-empty-hint">' + hintText + '</div>';
 
  // Reset issues bar
  const issuesLabel = currentLang === 'zh-TW' ? '問題' : 'Issues';
@@ -1113,49 +1144,18 @@ function resetDemo() {
  compileBtn.style.opacity = '0.4';
 }
 
-// Focus textarea → start auto-typing
-agentInput.addEventListener('focus', () => {
+// Pre-fill on page load
+prefillTextarea();
+
+// Send button click → run demo
+sendBtn.addEventListener('click', () => {
  if (demoPhase !== 'idle') return;
- demoPhase = 'typing';
- const content = getContent();
- let i = 0;
- typeTimer = setInterval(() => {
- agentInput.value = content.braindump.slice(0, ++i);
- agentInput.scrollTop = agentInput.scrollHeight;
- if (i >= content.braindump.length) {
-  clearInterval(typeTimer);
-  typeTimer = null;
-  demoPhase = 'ready';
- }
- }, 18);
-});
-
-// Keydown: skip typing or submit
-agentInput.addEventListener('keydown', (e) => {
- if (demoPhase === 'typing') {
- // Skip to end of typing
- clearInterval(typeTimer);
- typeTimer = null;
- agentInput.value = getContent().braindump;
- demoPhase = 'ready';
- e.preventDefault();
- return;
- }
-
- if (e.key === 'Enter' && !e.shiftKey) {
- e.preventDefault();
- if (demoPhase === 'ready') {
-  submitDemo();
- }
- }
-});
-
-function submitDemo() {
  demoPhase = 'submitted';
+
  const content = getContent();
  const text = agentInput.value;
  agentInput.value = '';
- agentInput.disabled = true;
+ sendBtn.disabled = true;
 
  // Show user message
  const userMsg = document.createElement('div');
@@ -1174,8 +1174,7 @@ function submitDemo() {
 
  // Remove hint and start generating code
  setTimeout(() => {
-  const hint = document.getElementById('editorHint');
-  if (hint) hint.remove();
+  editorBody.innerHTML = '';
   demoPhase = 'generating';
   generateCode(content, () => {
   // Remove thinking, show agent response
@@ -1196,7 +1195,7 @@ function submitDemo() {
   });
  }, 800);
  }, 400);
-}
+});
 
 function generateCode(content, callback) {
  let i = 0;
