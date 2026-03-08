@@ -202,7 +202,7 @@ transform: translateX(3px);
 
 /* IDE Layout */
 .ide-container {
-margin: 64px 0;
+margin: 64px auto;
 display: grid;
 grid-template-columns: 18% 1fr 28%;
 gap: 0;
@@ -212,8 +212,7 @@ overflow: hidden;
 background: var(--surface);
 width: 90vw;
 max-width: 1440px;
-margin-left: auto;
-margin-right: auto;
+aspect-ratio: 16 / 9;
 }
 
 .ide-bar {
@@ -280,7 +279,7 @@ font-size: 13px;
 line-height: 2;
 flex: 1;
 overflow-x: auto;
-min-height: 200px;
+overflow-y: auto;
 }
 
 .editor-line {
@@ -364,6 +363,7 @@ display: flex;
 flex-direction: column;
 border-right: 1px solid var(--border);
 background: rgba(0,0,0,0.1);
+overflow: hidden;
 }
 
 .issues-bar {
@@ -472,6 +472,7 @@ animation: pulse 2s infinite;
 
 .agent-body {
 flex: 1;
+min-height: 0;
 padding: 16px;
 font-size: 12px;
 overflow-y: auto;
@@ -826,6 +827,7 @@ opacity: 0.5;
 .ide-container {
 grid-template-columns: 1fr;
 max-width: 100%;
+aspect-ratio: auto;
 }
 .issues-sidebar {
 display: none;
@@ -835,7 +837,7 @@ border-right: none;
 border-bottom: 1px solid var(--border);
 }
 .agent-panel {
-max-height: 320px;
+max-height: 360px;
 }
 }
 
@@ -905,7 +907,7 @@ display: none;
  <div class="agent-bar" data-i18n="agent-bar">argue agent</div>
  <div class="agent-body" id="agentBody"></div>
  <div class="agent-input-area">
- <textarea class="agent-input" id="agentInput" rows="3" readonly></textarea>
+ <textarea class="agent-input" id="agentInput" rows="2" readonly></textarea>
  <button class="agent-send-btn" id="agentSendBtn" data-i18n="agent-send">Send to Argue →</button>
  </div>
  </div>
@@ -1124,9 +1126,11 @@ function resetDemo() {
  editorBody.innerHTML = '';
  issuesList.innerHTML = '';
 
- // Pre-fill textarea with braindump
- prefillTextarea();
+ // Pre-fill textarea with braindump and show input area
+ agentInput.style.display = '';
+ sendBtn.style.display = '';
  sendBtn.disabled = false;
+ prefillTextarea();
 
  // Reset hint
  const hintText = currentLang === 'zh-TW' ? '// 等待輸入中...' : '// waiting for input...';
@@ -1154,8 +1158,10 @@ sendBtn.addEventListener('click', () => {
 
  const content = getContent();
  const text = agentInput.value;
- agentInput.value = '';
- sendBtn.disabled = true;
+
+ // Hide input area
+ agentInput.style.display = 'none';
+ sendBtn.style.display = 'none';
 
  // Show user message
  const userMsg = document.createElement('div');
