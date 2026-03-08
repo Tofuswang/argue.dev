@@ -312,59 +312,25 @@ border-bottom: 1px solid var(--border);
 background: rgba(255,255,255,0.02);
 display: flex;
 align-items: center;
-gap: 6px;
+gap: 8px;
 }
 
-.compile-output-bar::before {
-content: '▶';
-font-size: 8px;
+.compile-output-body {
+padding: 20px 24px;
+}
+
+.compile-cmd {
+color: var(--text-dim);
+margin-bottom: 16px;
+}
+
+.compile-cmd .prompt {
 color: var(--green);
+user-select: none;
 }
 
-.compile-section {
-padding: 20px 24px;
-}
-
-.compile-section + .compile-section {
-border-top: 1px solid var(--border);
-}
-
-.compile-section-label {
-font-size: 11px;
-letter-spacing: 0.1em;
-text-transform: uppercase;
-color: var(--text-dim);
-margin-bottom: 12px;
-}
-
-.structure-item {
-display: flex;
-gap: 10px;
-align-items: baseline;
-margin-bottom: 4px;
-}
-
-.structure-tag {
-font-size: 11px;
-padding: 1px 6px;
-border-radius: 3px;
-font-weight: 500;
-white-space: nowrap;
-}
-
-.tag-claim { background: rgba(59, 130, 246, 0.15); color: var(--blue); }
-.tag-reason { background: rgba(34, 197, 94, 0.15); color: var(--green); }
-.tag-gap { background: rgba(244, 63, 94, 0.15); color: var(--accent); }
-
-.structure-text {
-color: var(--text-dim);
-font-weight: 300;
-}
-
-.compile-errors {
-padding: 20px 24px;
-border-top: 1px solid var(--border);
-background: rgba(244, 63, 94, 0.03);
+.compile-line {
+margin-bottom: 2px;
 }
 
 .compile-output .error-icon {
@@ -573,34 +539,31 @@ font-size: 16px;
  </div>
 
  <div class="compile-output">
- <div class="compile-output-bar" data-i18n="compile-bar">argue compiled your draft</div>
-
- <div class="compile-section">
- <div class="compile-section-label" data-i18n="structure-label">Extracted structure</div>
- <div class="structure-item">
- <span class="structure-tag tag-claim" data-i18n="struct-1-tag">CLAIM</span>
- <span class="structure-text" data-i18n="struct-1">"Taste is important for founders"</span>
+ <div class="compile-output-bar">
+ <div class="terminal-dot"></div>
+ <div class="terminal-dot"></div>
+ <div class="terminal-dot"></div>
+ <span data-i18n="compile-bar">argue compile output</span>
  </div>
- <div class="structure-item">
- <span class="structure-tag tag-reason" data-i18n="struct-2-tag">REASON</span>
- <span class="structure-text" data-i18n="struct-2">"Builders decide what to build; operators only optimize"</span>
- </div>
- <div class="structure-item">
- <span class="structure-tag tag-reason" data-i18n="struct-3-tag">REASON</span>
- <span class="structure-text" data-i18n="struct-3">"Taste = selecting 3 good ideas out of 100"</span>
- </div>
- <div class="structure-item">
- <span class="structure-tag tag-gap" data-i18n="struct-4-tag">GAP</span>
- <span class="structure-text" data-i18n="struct-4">"Taste → innovation" — link never established</span>
- </div>
- </div>
-
- <div class="compile-errors">
- <div data-i18n="error-1"><span class="error-icon">✗</span> You jump from "taste = picking ideas" to "taste is needed for innovation" but never explain why selecting well leads to innovating.</div>
+ <div class="compile-output-body" data-i18n="compile-body">
+ <div class="compile-cmd"><span class="prompt">$</span> argue compile draft.txt</div>
+ <div class="compile-line"><span class="dim">analyzing draft...</span></div>
+ <div class="compile-line"><span class="dim">found 1 claim, 2 reasons, 1 gap</span></div>
  <br>
- <div data-i18n="error-2"><span class="warn-icon">⚠</span> "Operators don't create anything new" — always true? This might be too broad. Consider narrowing the scope.</div>
+ <div class="compile-line"><span class="fn">claim</span> <span class="dim">→</span> <span class="string">"taste is important for founders"</span></div>
+ <div class="compile-line"> <span class="dim">├</span> <span class="type">reason</span> <span class="string">"builders decide what to build"</span></div>
+ <div class="compile-line"> <span class="dim">├</span> <span class="type">reason</span> <span class="string">"taste = picking 3 out of 100"</span></div>
+ <div class="compile-line"> <span class="dim">└</span> <span class="keyword">gap</span> <span class="string">"taste → innovation"</span> <span class="dim">link missing</span></div>
  <br>
- <div data-i18n="error-summary"><span class="dim">Found <strong>1 error</strong>, <strong>1 warning</strong>. Fix before publishing.</span></div>
+ <div class="compile-line"><span class="error-icon">✗</span> <strong>draft.txt:6-7</strong> <span class="keyword">logical gap</span></div>
+ <div class="compile-line"><span class="dim">  you defined taste as "picking good ideas" but jumped to</span></div>
+ <div class="compile-line"><span class="dim">  "prerequisite for innovation" — why does selecting well</span></div>
+ <div class="compile-line"><span class="dim">  lead to innovating?</span></div>
+ <br>
+ <div class="compile-line"><span class="warn-icon">⚠</span> <strong>draft.txt:5</strong> <span class="type">scope too broad</span></div>
+ <div class="compile-line"><span class="dim">  "operators don't create anything new" — always true?</span></div>
+ <br>
+ <div class="compile-line"><span class="keyword">1 error</span>, <span class="type">1 warning</span>. fix before publishing.</div>
  </div>
  </div>
 
@@ -676,19 +639,8 @@ const i18n = {
  'hero-cta': '加入候補名單 <span class="arrow">→</span>',
  'term-title': '你的草稿',
  'term-body': '<div class="line"><span class="line-num">1</span><span>我覺得品味對創辦人超級重要。就是，</span></div><div class="line"><span class="line-num">2</span><span>執行者只會維持現狀，但建造者要決定</span></div><div class="line"><span class="line-num">3</span><span>到底要做什麼。品味基本上就是從 100 個</span></div><div class="line"><span class="line-num">4</span><span>想法裡面挑出 3 個好的那種能力。執行者</span></div><div class="line"><span class="line-num">5</span><span>不會真的創造新東西，他們就是優化而已。</span></div><div class="line"><span class="line-num">6</span><span>所以品味基本上就是創新的前提吧我覺得</span></div>',
- 'compile-bar': 'argue 編譯了你的草稿',
- 'structure-label': '擷取的結構',
- 'struct-1-tag': '主張',
- 'struct-1': '「品味對創辦人很重要」',
- 'struct-2-tag': '理由',
- 'struct-2': '「建造者決定做什麼；執行者只是優化」',
- 'struct-3-tag': '理由',
- 'struct-3': '「品味 = 從 100 個想法中選出 3 個好的」',
- 'struct-4-tag': '斷裂',
- 'struct-4': '「品味 → 創新」——從未建立連結',
- 'error-1': '<span class="error-icon">✗</span> 你從「品味 = 挑選能力」跳到「品味是創新的前提」，但沒解釋為什麼選得好就等於能創新。',
- 'error-2': '<span class="warn-icon">⚠</span>「執行者不會創造新東西」——永遠成立嗎？這個說法可能太廣。考慮限縮範圍。',
- 'error-summary': '<span class="dim">發現 <strong>1 個錯誤</strong>、<strong>1 個警告</strong>。發布前請修正。</span>',
+ 'compile-bar': 'argue 編譯輸出',
+ 'compile-body': '<div class="compile-cmd"><span class="prompt">$</span> argue compile 草稿.txt</div><div class="compile-line"><span class="dim">分析草稿中...</span></div><div class="compile-line"><span class="dim">找到 1 個主張、2 個理由、1 個斷裂</span></div><br><div class="compile-line"><span class="fn">主張</span> <span class="dim">→</span> <span class="string">「品味對創辦人很重要」</span></div><div class="compile-line"> <span class="dim">├</span> <span class="type">理由</span> <span class="string">「建造者決定做什麼」</span></div><div class="compile-line"> <span class="dim">├</span> <span class="type">理由</span> <span class="string">「品味 = 從 100 個裡挑 3 個」</span></div><div class="compile-line"> <span class="dim">└</span> <span class="keyword">斷裂</span> <span class="string">「品味 → 創新」</span> <span class="dim">缺少連結</span></div><br><div class="compile-line"><span class="error-icon">✗</span> <strong>草稿.txt:5-6</strong> <span class="keyword">邏輯斷裂</span></div><div class="compile-line"><span class="dim">  你把品味定義為「挑選好想法」但直接跳到</span></div><div class="compile-line"><span class="dim">  「創新的前提」——為什麼選得好就等於能創新？</span></div><br><div class="compile-line"><span class="warn-icon">⚠</span> <strong>草稿.txt:5</strong> <span class="type">範圍過廣</span></div><div class="compile-line"><span class="dim">  「執行者不會創造新東西」——永遠成立嗎？</span></div><br><div class="compile-line"><span class="keyword">1 個錯誤</span>、<span class="type">1 個警告</span>。發布前請修正。</div>',
  'features-label': '// 怎麼用',
  'f1-title': '想到什麼寫什麼',
  'f1-desc': '把你的想法倒出來——亂的、沒寫完的、意識流的都行。不用管結構，那是 Argue 的事。',
