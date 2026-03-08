@@ -23,6 +23,7 @@
  }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
 
 body {
 background: var(--bg);
@@ -163,6 +164,39 @@ color: var(--text-dim);
 max-width: 520px;
 line-height: 1.8;
 font-weight: 300;
+}
+
+.hero-cta {
+display: inline-flex;
+align-items: center;
+gap: 8px;
+margin-top: 36px;
+padding: 14px 28px;
+background: var(--accent);
+color: #fff;
+font-family: var(--mono);
+font-size: 13px;
+font-weight: 500;
+letter-spacing: 0.05em;
+border: none;
+border-radius: 6px;
+cursor: pointer;
+text-decoration: none;
+transition: all 0.2s;
+}
+
+.hero-cta:hover {
+background: #e11d48;
+transform: translateY(-1px);
+box-shadow: 0 4px 24px rgba(244, 63, 94, 0.3);
+}
+
+.hero-cta .arrow {
+transition: transform 0.2s;
+}
+
+.hero-cta:hover .arrow {
+transform: translateX(3px);
 }
 
 /* Terminal block */
@@ -423,10 +457,11 @@ font-size: 16px;
 
  <section class="hero">
  <div class="hero-label" data-i18n="hero-label">A new kind of writing tool</div>
- <h1 data-i18n="hero-title">Write arguments<br>like you write <em>code.</em></h1>
+ <h1 data-i18n="hero-title">Your logic has bugs.<br>Now you can <em>fix them.</em></h1>
  <p class="hero-sub" data-i18n="hero-sub">
- An argument compiler that catches logical errors before your readers do. Define your terms. Check your reasoning. Ship arguments that compile.
+ Argue is a compiler for written arguments — it catches undefined terms, broken reasoning chains, and logical gaps before you publish. Think of it as a linter for your thinking.
  </p>
+ <a href="#waitlist" class="hero-cta" data-i18n="hero-cta">Join the waitlist <span class="arrow">→</span></a>
  </section>
 
  <div class="terminal">
@@ -544,7 +579,7 @@ font-size: 16px;
  </p>
  </section>
 
- <section class="waitlist">
+ <section class="waitlist" id="waitlist">
  <h2 data-i18n="waitlist-title">Get early access.</h2>
  <p class="waitlist-sub" data-i18n="waitlist-sub">We're building the first version now. Join the waitlist.</p>
 
@@ -563,8 +598,9 @@ const i18n = {
  'zh-TW': {
  'nav-status': '公開建造中',
  'hero-label': '一種全新的寫作工具',
- 'hero-title': '像寫程式一樣<br>寫<em>論述。</em>',
- 'hero-sub': '一個論述編譯器，在讀者發現之前就抓出你的邏輯錯誤。定義你的術語、檢查你的推理、發布能通過編譯的論述。',
+ 'hero-title': '你的邏輯有 bug。<br>現在你可以<em>修好它。</em>',
+ 'hero-sub': 'Argue 是一個論述編譯器——在你發布之前，幫你抓出未定義的術語、斷裂的推理鏈和邏輯漏洞。把它想成你思考的 linter。',
+ 'hero-cta': '加入候補名單 <span class="arrow">→</span>',
  'error-1': '<span class="error-icon">✗</span> <strong>第 11 行</strong> — <span class="keyword">型別不符</span>：「品味」被定義為選擇能力，但「創新」從未被定義。無法推斷因果關係。',
  'error-2': '<span class="warn-icon">⚠</span> <strong>第 6 行</strong> — <span class="type">未定義術語</span>：「operators」在主張中使用但未在 <span class="keyword">define</span> 區塊中定義。',
  'error-summary': '<span class="dim">發現 <strong>1 個錯誤</strong>、<strong>1 個警告</strong>。發布前請修正。</span>',
